@@ -313,12 +313,16 @@ static void boot_jump_linux(bootm_headers_t *images, int flag)
 
 	if (IMAGE_ENABLE_OF_LIBFDT && images->ft_len)
 		r2 = (unsigned long)images->ft_addr;
-	else
+	else {
 		r2 = gd->bd->bi_boot_params;
+#ifdef CONFIG_OF_CONTROL
+        r2 += 0xc00000; // FIXME
+#endif
+	}
 
 #ifdef CONFIG_OF_CONTROL
-    r2 += 0xc00000; // FIXME
-	memcpy((void *)r2, (void *)gd->fdt_blob, fdt_totalsize((void *)gd->fdt_blob));
+    r2 = getenv_ulong("fdtcontroladdr", 16, r2);
+    memcpy((void *)r2, gd->fdt_blob, fdt_totalsize(gd->fdt_blob));
 #endif
 
 	if (!fake) {
