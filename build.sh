@@ -31,6 +31,7 @@ else
 	ssc30kq-nor
 	ssc338q-nor
 	ssc338q-nand
+	h3c-tc2101
 	"
 fi
 
@@ -53,6 +54,9 @@ do
 		ssc30kd-*|ssc30kq-*|ssc338q-*)
 			family=infinity6e
 			;;
+		h3c-tc2101)
+			family=infinity6b0
+			;;
 		*)
 			echo "Unknown SOC: $soc"
 			exit 1
@@ -60,6 +64,9 @@ do
 	esac
 
 	case $board in
+		h3c-tc2101)
+			flash=nor
+			;;
 		*-nand)
 			flash=nand
 			;;

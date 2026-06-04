@@ -1,0 +1,189 @@
+/*
+ * Copyright (c) 2014 MundoReader S.L.
+ * Author: Matthias Brugger <matthias.bgg@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+/dts-v1/;
+#include "infinity6b0.dtsi"
+
+/ {
+    model = "h3c-tc2101";
+    compatible = "sstar,infinity6b0";
+
+    /* memory setting will be replaced with LX_MEM*/
+    memory {
+        reg = <0x20000000 0x04000000>;
+    };
+	/* this cmdline will be replaced with uboot bootargs*/
+    chosen {
+        bootargs = "console=ttyS0,115200 panic=20 root=/dev/mtdblock3 init=/init mtdparts=NOR_FLASH:256k(boot),64k(env),2048k(kernel),8192k(rootfs),-(rootfs_data) LX_MEM=0x3FE0000 mma_heap=mma_heap_name0,miu=0,sz=0x2000000 cma=2M";
+    };
+
+/*!!IMPORTANT!! The reserved memory must be 1MB aligned*/
+    reserved-memory {
+        #address-cells = <1>;
+        #size-cells = <1>;
+        ranges;
+
+        /*cma0 {
+            compatible = "shared-dma-pool";
+            size = <0x400000>;
+            reusable;
+            alignment = <0x1000>;
+            linux,cma-default;
+        };*/
+    };
+
+    soc {
+        Sstar-ehci-1 {
+            compatible = "Sstar-ehci-1";
+            dpdm_swap=<0>;
+            power-enable-pad = <PAD_UNKNOWN>;
+        };
+
+        vif {
+            vif_sr0_par_mode = <4>;
+            vif_sr0_mipi_mode = <2>;
+            vif_sr0_bt656_mode = <3>;
+            vif_sr0_mclk_mode = <1>;
+            vif_sr0_pdn_mode  = <1>;
+            vif_sr0_rst_mode  = <1>;
+            vif_sr0_parallel_rst_mode  = <2>;
+            vif_sr0_parallel_pdn_mode  = <2>;
+            vif_sr0_mipi_rst_mode  = <1>;
+            vif_sr0_mipi_pdn_mode  = <1>;
+            vif_sr0_hvsync_mode  = <0>;
+            vif_sr0_pck_mode  = <0>;
+            /* Config sensor 1 pad mux */
+            vif_sr1_par_mode = <2>;
+            vif_sr1_mipi_mode = <2>;
+            vif_sr1_bt656_mode = <2>;
+        };
+
+        csi {
+            sr0_mipi_mode = <2>;
+
+        };
+
+        core_voltage {
+            vid_width = <1>;
+            vid_gpios = <PAD_SAR_GPIO3>;
+            vid_voltages = <900 1000>;  //2b'00 2b'01
+        };
+    };
+
+};
+
+&sound {
+   amp-gpio = <PAD_FUART_TX 1>;
+};
+
+&gpio {
+    gpio-line-names = "GPIO0",
+                    "GPIO1",
+                    "GPIO2",
+                    "GPIO3",
+                    "GPIO4",
+                    "GPIO5",
+                    "GPIO6",
+                    "GPIO7",
+                    "GPIO8",
+                    "GPIO9",
+                    "GPIO12",
+                    "GPIO13",
+                    "GPIO14",
+                    "GPIO15",
+                    "FUART_RX",
+                    "speaker_en", /* FUART_TX */
+                    "vmotor_en",  /* FUART_CTS */
+                    "FUART_RTS",
+                    "I2C0_SCL",
+                    "I2C0_SDA",
+                    "I2C1_SCL",
+                    "I2C1_SDA",
+                    "SR_IO00",
+                    "SR_IO01",
+                    "SR_IO02",
+                    "SR_IO03",
+                    "SR_IO04",
+                    "SR_IO05",
+                    "SR_IO06",
+                    "SR_IO07",
+                    "SR_IO08",
+                    "SR_IO09",
+                    "SR_IO10",
+                    "SR_IO11",
+                    "cis_pwdn",  /* SR_IO12 */
+                    "cis_reset", /* SR_IO13 */
+                    "SR_IO14",
+                    "SR_IO15",
+                    "vbus_en",   /* SR_IO16 */
+                    "SR_IO17",   /* SR_IO17 */
+                    "UART0_RX",
+                    "UART0_TX",
+                    "UART1_RX",
+                    "UART1_TX",
+                    "motor_in1",
+                    "motor_in2",
+                    "motor_in3",
+                    "motor_in4",
+                    "SPI1_CZ",
+                    "SPI1_CK",
+                    "SPI1_DI",
+                    "SPI1_DO",
+                    "hmotor_en",
+                    "PWM1",
+                    "SD_CLK",
+                    "SD_CMD",
+                    "SD_D0",
+                    "SD_D1",
+                    "SD_D2",
+                    "SD_D3",
+                    "PM_SD_CDZ",
+                    "wled",      /* PM_IRIN */
+                    "PM_GPIO0",
+                    "PM_GPIO1",
+                    "PM_GPIO2",
+                    "PM_GPIO3",
+                    "sys_reset", /* PM_GPIO4 */
+                    "PM_GPIO7",
+                    "PM_GPIO8",
+                    "PM_GPIO9",
+                    "PM_SPI_CZ",
+                    "PM_SPI_CK",
+                    "PM_SPI_DI",
+                    "PM_SPI_DO",
+                    "PM_SPI_WPZ",
+                    "PM_SPI_HLD",
+                    "blue-led",  /* PM_LED0 */
+                    "red-led",   /* PM_LED1 */
+                    "ircut_ina", /* SAR_GPIO0 */
+                    "ircut_inb", /* SAR_GPIO1 */
+                    "cds_in",    /* SAR_GPIO2 */
+                    "SAR_GPIO3",
+                    "ETH_RN",
+                    "ETH_RP",
+                    "ETH_TN",
+                    "ETH_TP",
+                    "USB_DM",
+                    "USB_DP",
+                    "SD1_IO0",
+                    "SD1_IO1",
+                    "SD1_IO2",
+                    "SD1_IO3",
+                    "SD1_IO4",
+                    "SD1_IO5",
+                    "SD1_IO6",
+                    "SD1_IO7",
+                    "SD1_IO8";
+};
