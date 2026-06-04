@@ -45,7 +45,7 @@ do
 		ssc325-*|ssc325de-*)
 			family=infinity6
 			;;
-		ssc333-*|ssc335-*|ssc337-*|ssc335de-*|ssc337de-*)
+		ssc333-*|ssc335-*|ssc337-*|ssc335de-*|ssc337de-*|h3c-tc2101)
 			family=infinity6b0
 			;;
 		ssc377-*|ssc377d-*|ssc377de-*|ssc377qe-*|ssc378de-*|ssc378qe-*)
@@ -54,9 +54,6 @@ do
 		ssc30kd-*|ssc30kq-*|ssc338q-*)
 			family=infinity6e
 			;;
-		h3c-tc2101)
-			family=infinity6b0
-			;;
 		*)
 			echo "Unknown SOC: $soc"
 			exit 1
@@ -64,9 +61,6 @@ do
 	esac
 
 	case $board in
-		h3c-tc2101)
-			flash=nor
-			;;
 		*-nand)
 			flash=nand
 			;;
