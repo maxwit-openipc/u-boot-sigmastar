@@ -20,6 +20,7 @@
 *.cfgtmp
 *.cmd
 .config*
+*.dtb.*.tmp
 
 # host programs on Cygwin
 *.exe
