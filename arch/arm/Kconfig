@@ -851,6 +851,10 @@ config TARGET_INFINITY6B0
     bool "Infinity6b0 board"
     select INFINITY6B0
 
+config TARGET_SSC337_NOR
+    bool "ssc337-nor board"
+    select INFINITY6B0
+
 config PIONEER3
     bool "Pioneer3 platform"
     select CPU_V7
@@ -1083,6 +1087,7 @@ source "board/wandboard/Kconfig"
 source "board/woodburn/Kconfig"
 source "board/xaeniax/Kconfig"
 source "board/zipitz2/Kconfig"
+source "board/sigmastar/ssc337-nor/Kconfig"
 
 source "arch/arm/Kconfig.debug"
 
