@@ -1,8 +1,14 @@
 #!/usr/bin/env bash
 
-
-export ARCH=arm
-export CROSS_COMPILE=arm-none-eabi-
+if [ -z "$TOOLCHAIN" ]; then
+	for t in arm-none-eabi- arm-linux-gnueabi- arm-linux-gnueabihf-
+	do
+		if which ${t}gcc > /dev/null; then
+			TOOLCHAIN=$t
+			break
+		fi
+	done
+fi
 
 rm -rf output
 mkdir -p output
@@ -37,9 +43,10 @@ fi
 
 for board in $board_list
 do
-	echo "***************************"
-	echo "  Building '${board}' "
-	echo "***************************"
+	image=u-boot-${board}.bin
+	echo "Building '${image}'"
+	echo "    with '$TOOLCHAIN'"
+	echo "==============="
 
 	case $board in
 		ssc325-*|ssc325de-*)
@@ -58,7 +65,7 @@ do
 			family=infinity6b0
 			;;
 		*)
-			echo "Unknown SOC: $soc"
+			echo "Unknown board: $board"
 			exit 1
 			;;
 	esac
@@ -76,12 +83,12 @@ do
 	esac
 
 	make distclean
-	make ${board}_defconfig
-	make -j8 || exit 1
+	make ARCH=arm ${board}_defconfig
+	make ARCH=arm CROSS_COMPILE=$TOOLCHAIN -j8 || exit 1
 
 	./create_img.sh
 	sh make_boot_spi${flash}.sh ${family}
-	mv BOOT.bin output/u-boot-${board}.bin
+	mv BOOT.bin output/$image
 
 	echo
 done
