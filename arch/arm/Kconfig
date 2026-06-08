@@ -1092,6 +1092,7 @@ source "board/woodburn/Kconfig"
 source "board/xaeniax/Kconfig"
 source "board/zipitz2/Kconfig"
 source "board/sigmastar/ssc337-nor/Kconfig"
+source "board/h3c/tc2101/Kconfig"
 
 source "arch/arm/Kconfig.debug"
 
