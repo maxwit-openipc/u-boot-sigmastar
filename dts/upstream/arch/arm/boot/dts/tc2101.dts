@@ -18,7 +18,8 @@
 
 / {
     model = "IPC-VEMyMTAxCg";
-    compatible = "sstar,infinity6b0";
+    compatible = "h3c,tc2101",
+        "sigmaster,ssc337";
 
     /* memory setting will be replaced with LX_MEM*/
     memory {

@@ -492,6 +492,28 @@ static int initr_env(void)
 #endif /* CONFIG_I2CFAST */
 #endif /* CONFIG_405GP, CONFIG_405EP */
 #endif /* CONFIG_SYS_EXTBDINFO */
+
+#if defined(CONFIG_OF_CONTROL) && (defined(CONFIG_FIT) || defined(CONFIG_OF_LIBFDT))
+	const char *vendor_and_board = NULL;
+	if (fdt_get_string_index(gd->fdt_blob, 0, "compatible", 0, &vendor_and_board) == 0) {
+		const char *board = strchr(vendor_and_board, ',');
+		if (board) {
+			board++;
+			setenv("board", board);
+		}
+	}
+
+	const char *vendor_and_soc = NULL;
+	if (fdt_get_string_index(gd->fdt_blob, 0, "compatible", 1, &vendor_and_soc) == 0) {
+		const char *soc = strchr(vendor_and_soc, ',');
+		if (soc) {
+			soc++;
+			setenv("soc", soc);
+		}
+	}
+
+#endif
+
 	return 0;
 }
 
