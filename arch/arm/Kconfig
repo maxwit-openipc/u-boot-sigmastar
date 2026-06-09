@@ -39,6 +39,10 @@ config CPU_PXA
 config CPU_SA1100
         bool
 
+config INFINITY6B0
+    bool "Infinity6b0 platform"
+    select CPU_V7
+
 config SYS_CPU
         default "arm720t" if CPU_ARM720T
         default "arm920t" if CPU_ARM920T
@@ -843,10 +847,17 @@ config INFINITY6E
     select CPU_V7
     select TARGET_INFINITY6E
 
-config INFINITY6B0
-    bool "Infinity6b0 platform"
-    select CPU_V7
-    select TARGET_INFINITY6B0
+config TARGET_INFINITY6B0
+    bool "Infinity6b0 board"
+    select INFINITY6B0
+
+config TARGET_SSC337_NOR
+    bool "ssc337-nor board"
+    select INFINITY6B0
+
+config TARGET_TC2101
+    bool "tc2101 board"
+    select INFINITY6B0
 
 config PIONEER3
     bool "Pioneer3 platform"
@@ -1080,6 +1091,8 @@ source "board/wandboard/Kconfig"
 source "board/woodburn/Kconfig"
 source "board/xaeniax/Kconfig"
 source "board/zipitz2/Kconfig"
+source "board/sigmastar/ssc337-nor/Kconfig"
+source "board/h3c/tc2101/Kconfig"
 
 source "arch/arm/Kconfig.debug"
 

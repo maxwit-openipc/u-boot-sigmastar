@@ -37,6 +37,7 @@ else
 	ssc30kq-nor
 	ssc338q-nor
 	ssc338q-nand
+	tc2101
 	"
 fi
 
@@ -60,6 +61,9 @@ do
 		ssc30kd-*|ssc30kq-*|ssc338q-*)
 			family=infinity6e
 			;;
+		tc2101)
+			family=infinity6b0
+			;;
 		*)
 			echo "Unknown board: $board"
 			exit 1
@@ -67,6 +71,9 @@ do
 	esac
 
 	case $board in
+		tc2101)
+			flash=nor
+			;;
 		*-nand)
 			flash=nand
 			;;
