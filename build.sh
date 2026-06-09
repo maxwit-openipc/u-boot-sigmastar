@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 if [ -z "$TOOLCHAIN" ]; then
-	for t in arm-none-eabi- arm-linux-gnueabi- arm-linux-gnueabihf-
+	for t in arm-linux-gnueabi- arm-none-eabi-
 	do
 		if which ${t}gcc > /dev/null; then
 			TOOLCHAIN=$t
@@ -84,7 +84,7 @@ do
 
 	make distclean
 	make ARCH=arm ${board}_defconfig
-	make ARCH=arm CROSS_COMPILE=$TOOLCHAIN -j8 || exit 1
+	make ARCH=arm CROSS_COMPILE=$TOOLCHAIN -j$(nproc) || exit 1
 
 	./create_img.sh
 	sh make_boot_spi${flash}.sh ${family}
