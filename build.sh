@@ -13,17 +13,14 @@ fi
 rm -rf output
 mkdir -p output
 
-# dts_path=../output/ssc337/build/linux-custom/arch/arm/boot/dts
-# board=infinity6b0-ssc009a-s01a
-
 if [ $# -gt 0 ]; then
 	board_list=$1
 else
-	board_list="ssc325-nor
-	ssc325de-nand
-	ssc333-nor
-	ssc335-nor
+	board_list="
+	tc2101
 	ssc337-nor
+	ssc335-nor
+	ssc333-nor
 	ssc335de-nor
 	ssc337de-nor
 	ssc337de-nand
@@ -37,22 +34,23 @@ else
 	ssc30kq-nor
 	ssc338q-nor
 	ssc338q-nand
-	tc2101
+	ssc325-nor
+	ssc325de-nand
 	"
 fi
 
 for board in $board_list
 do
 	image=u-boot-${board}.bin
-	echo "Building '${image}'"
-	echo "    with '$TOOLCHAIN'"
-	echo "==============="
+
+	echo "Building '${image}' with '$TOOLCHAIN'"
+	echo "======================================="
 
 	case $board in
 		ssc325-*|ssc325de-*)
 			family=infinity6
 			;;
-		ssc333-*|ssc335-*|ssc337-*|ssc335de-*|ssc337de-*)
+		ssc333-*|ssc335-*|ssc337-*|ssc335de-*|ssc337de-*|tc2101)
 			family=infinity6b0
 			;;
 		ssc377-*|ssc377d-*|ssc377de-*|ssc377qe-*|ssc378de-*|ssc378qe-*)
@@ -61,9 +59,6 @@ do
 		ssc30kd-*|ssc30kq-*|ssc338q-*)
 			family=infinity6e
 			;;
-		tc2101)
-			family=infinity6b0
-			;;
 		*)
 			echo "Unknown board: $board"
 			exit 1
@@ -71,24 +66,24 @@ do
 	esac
 
 	case $board in
-		tc2101)
-			flash=nor
-			;;
 		*-nand)
 			flash=nand
+			defconf=${family}_spinand_defconfig
 			;;
 		*)
 			flash=nor
+			defconf=${family}_defconfig
 			;;
 	esac
 
 	make distclean
-	make ARCH=arm ${board}_defconfig
-	make ARCH=arm CROSS_COMPILE=$TOOLCHAIN -j$(nproc) || exit 1
+	make ARCH=arm $defconf
+	make ARCH=arm CROSS_COMPILE=$TOOLCHAIN DEVICE_TREE=$board -j$(nproc) || exit 1
 
 	./create_img.sh
 	sh make_boot_spi${flash}.sh ${family}
 	mv BOOT.bin output/$image
+
 
 	echo
 done
