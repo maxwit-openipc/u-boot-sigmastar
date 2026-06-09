@@ -26,10 +26,10 @@ else
 	ssc337-nor
 	ssc335de-nor
 	ssc337de-nor
+	ssc337de-nand
 	ssc377-nor
 	ssc377d-nor
 	ssc377de-nor
-	ssc377de-nand
 	ssc377qe-nor
 	ssc378de-nor
 	ssc378qe-nor

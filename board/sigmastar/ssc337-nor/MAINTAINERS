@@ -1,5 +1,0 @@
-SSC337_NOR BOARD
-M:	Conke Hu <conke.hu@maxwit.com>
-S:	Maintained
-F:	board/sigmastar/ssc337-nor/
-F:	configs/ssc337-nor_defconfig
