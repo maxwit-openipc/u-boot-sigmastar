@@ -24,12 +24,6 @@ else
 	ssc335de-nor
 	ssc337de-nor
 	ssc337de-nand
-	ssc30kd-nor
-	ssc30kq-nor
-	ssc338q-nor
-	ssc338q-nand
-	ssc325-nor
-	ssc325de-nand
 	"
 fi
 
