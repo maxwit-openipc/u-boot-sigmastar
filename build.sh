@@ -70,45 +70,6 @@ do
 			;;
 	esac
 
-	# case $board in
-	# 	ssc30kd-*|ssc30kq-*|ssc338q-*)
-	# 		dtb_name="infinity6e-ssc012b-s01a"
-	# 		;;
-	# 	ssc377de-*|ssc377qe-*|ssc378de-*|ssc378qe-*)
-	# 		dtb_name="infinity6c-ssc027d-s01a"
-	# 		;;
-	# 	ssc377-*|ssc377d-*)
-	# 		dtb_name="infinity6c-ssc027a-s01a"
-	# 		;;
-	# 	ssc335de-*|ssc337de-*)
-	# 		dtb_name="infinity6b0-ssc009b-s01a"
-	# 		;;
-	# 	ssc333-*|ssc335-*|ssc337-*)
-	# 		dtb_name="infinity6b0-ssc009a-s01a"
-	# 		;;
-	# 	ssc325de-*)
-	# 		dtb_name="infinity6-ssc009b-s01a"
-	# 		;;
-	# 	ssc325-*)
-	# 		dtb_name="infinity6-ssc009a-s01a"
-	# 		;;
-	# 	tc2101)
-	# 		dtb_name=""
-	# 		;;
-	# 	*)
-	# 		echo "No dts for board $board"
-	# 		exit 1
-	# 		;;
-	# esac
-
-	# if [ -z "$dtb_name" ]; then
-	# 	continue
-	# else
-	# 	echo cp -v dts/upstream/arch/arm/boot/dts/${dtb_name}.dts dts/upstream/arch/arm/boot/dts/${board}.dts
-	# 	cp -v dts/upstream/arch/arm/boot/dts/${dtb_name}.dts dts/upstream/arch/arm/boot/dts/${board}.dts
-	# 	continue
-	# fi
-
 	make distclean
 	make ARCH=arm $defconf
 	make ARCH=arm CROSS_COMPILE=$TOOLCHAIN DEVICE_TREE=$board -j$(nproc) || exit 1
@@ -116,7 +77,6 @@ do
 	./create_img.sh
 	sh make_boot_spi${flash}.sh ${family}
 	mv BOOT.bin output/$image
-
 
 	echo
 done
