@@ -24,18 +24,6 @@ else
 	ssc335de-nor
 	ssc337de-nor
 	ssc337de-nand
-	ssc377-nor
-	ssc377d-nor
-	ssc377de-nor
-	ssc377qe-nor
-	ssc378de-nor
-	ssc378qe-nor
-	ssc30kd-nor
-	ssc30kq-nor
-	ssc338q-nor
-	ssc338q-nand
-	ssc325-nor
-	ssc325de-nand
 	"
 fi
 
@@ -83,7 +71,6 @@ do
 	./create_img.sh
 	sh make_boot_spi${flash}.sh ${family}
 	mv BOOT.bin output/$image
-
 
 	echo
 done

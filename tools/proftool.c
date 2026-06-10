@@ -431,10 +431,9 @@ static int read_trace_config(FILE *fin)
 
 		err = regcomp(&line->regex, tok, REG_NOSUB);
 		if (err) {
-			int ret = regex_report_error(&line->regex, err, "compile",
-						  tok);
+			int ret = regex_report_error(&line->regex, err, "compile", tok);
 			free(line);
-            return ret;
+			return ret;
 		}
 
 		/* link this new one to the end of the list */
