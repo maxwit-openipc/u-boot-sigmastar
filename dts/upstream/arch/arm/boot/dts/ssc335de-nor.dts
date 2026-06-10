@@ -17,16 +17,18 @@
 #include "infinity6b0.dtsi"
 
 / {
-    model = "INFINITY6B0 SSC009B-S01A QFN128";
-    compatible = "sstar,infinity6b0";
+    model = "SSC335DE with SPI NOR 16M";
+    compatible = "generic,ssc335de-nor",
+        "sstar,ssc335de",
+        "sstar,infinity6b0";
 
     /* memory setting will be replaced with LX_MEM*/
     memory {
-        reg = <0x20000000 0x08000000>;
+        reg = <0x20000000 0x04000000>;
     };
 	/* this cmdline will be replaced with uboot bootargs*/
     chosen {
-        bootargs = "console=ttyS0,115200n8r androidboot.console=ttyS0 root=/dev/mtdblock2 init=/linuxrc cma=16m";
+        bootargs = "console=ttyS0,115200 panic=20 root=/dev/mtdblock3 init=/init mtdparts=NOR_FLASH:256k(boot),64k(env),2048k(kernel),8192k(rootfs),-(rootfs_data) LX_MEM=0x3FE0000 mma_heap=mma_heap_name0,miu=0,sz=0x2000000 cma=2M";
     };
 
 /*!!IMPORTANT!! The reserved memory must be 1MB aligned*/
@@ -45,11 +47,6 @@
     };
 
     soc {
-
-        rtcpwc {
-            status = "ok";
-        };
-
         Sstar-ehci-1 {
             compatible = "Sstar-ehci-1";
             dpdm_swap=<0>;
@@ -57,9 +54,9 @@
         };
 
         vif {
-            vif_sr0_par_mode = <2>;
-            vif_sr0_mipi_mode = <1>;
-            vif_sr0_bt656_mode = <2>;
+            vif_sr0_par_mode = <4>;
+            vif_sr0_mipi_mode = <2>;
+            vif_sr0_bt656_mode = <3>;
             vif_sr0_mclk_mode = <1>;
             vif_sr0_pdn_mode  = <1>;
             vif_sr0_rst_mode  = <1>;
@@ -76,17 +73,14 @@
         };
 
         csi {
-            sr0_mipi_mode = <1>;
+            sr0_mipi_mode = <2>;
+
         };
 
         core_voltage {
-            vid_width = <2>;
-            vid_gpios = <PAD_PM_GPIO7 PAD_PM_GPIO8>;
-            vid_voltages = <850 900 950 1000>;  //2b'00 2b'01 2b'10 2b'11
-        };
-
-        sdmmc {
-            slotnum = <2>;
+            vid_width = <1>;
+            vid_gpios = <PAD_SAR_GPIO3>;
+            vid_voltages = <900 1000>;  //2b'00 2b'01
         };
     };
 

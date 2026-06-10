@@ -17,8 +17,10 @@
 #include "infinity6b0.dtsi"
 
 / {
-    model = "INFINITY6B0 SSC009B-S01A QFN128";
-    compatible = "sstar,infinity6b0";
+    model = "SSC337DE with SPI NOR 16M";
+    compatible = "generic,ssc337de-nor",
+        "sstar,ssc337de",
+        "sstar,infinity6b0";
 
     /* memory setting will be replaced with LX_MEM*/
     memory {
