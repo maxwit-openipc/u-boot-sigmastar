@@ -16,7 +16,7 @@ fi
 
 test -z $OUTPUT && OUTPUT=output
 
-rm -rf $OUTPUT
+rm -vf $OUTPUT/u-boot*
 mkdir -p $OUTPUT
 
 if [ -z "$TOOLCHAIN" ]; then
@@ -27,6 +27,11 @@ if [ -z "$TOOLCHAIN" ]; then
 			break
 		fi
 	done
+fi
+
+if [ -z $TOOLCHAIN ]; then
+	echo "No toolchain found!"
+	exit 1
 fi
 
 for board in $board_list
