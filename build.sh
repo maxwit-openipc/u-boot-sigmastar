@@ -1,18 +1,5 @@
 #!/usr/bin/env bash
 
-if [ -z "$TOOLCHAIN" ]; then
-	for t in arm-linux-gnueabi- arm-none-eabi-
-	do
-		if which ${t}gcc > /dev/null; then
-			TOOLCHAIN=$t
-			break
-		fi
-	done
-fi
-
-rm -rf output
-mkdir -p output
-
 if [ $# -gt 0 ]; then
 	board_list=$1
 else
@@ -25,6 +12,21 @@ else
 	ssc337de-nor
 	ssc337de-nand
 	"
+fi
+
+test -z $OUTPUT && OUTPUT=output
+
+rm -rf $OUTPUT
+mkdir -p $OUTPUT
+
+if [ -z "$TOOLCHAIN" ]; then
+	for t in arm-linux-gnueabi- arm-none-eabi-
+	do
+		if which ${t}gcc > /dev/null; then
+			TOOLCHAIN=$t
+			break
+		fi
+	done
 fi
 
 for board in $board_list
@@ -70,7 +72,7 @@ do
 
 	./create_img.sh
 	sh make_boot_spi${flash}.sh ${family}
-	mv BOOT.bin output/$image
+	mv BOOT.bin $OUTPUT/$image
 
 	echo
 done
