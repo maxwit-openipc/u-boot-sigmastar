@@ -337,6 +337,11 @@ static inline int setenv_addr(const char *varname, const void *addr)
 	return setenv_hex(varname, (ulong)addr);
 }
 
+/**
+ * Force delete a environment variable
+ */
+int force_delenv(const char *varname);
+
 #ifdef CONFIG_ARM
 # include <asm/mach-types.h>
 # include <asm/setup.h>

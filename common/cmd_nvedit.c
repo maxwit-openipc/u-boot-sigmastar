@@ -622,6 +622,12 @@ static int do_env_edit(cmd_tbl_t *cmdtp, int flag, int argc,
 	return setenv(argv[1], buffer);
 }
 #endif /* CONFIG_CMD_EDITENV */
+
+int force_delenv(const char *varname)
+{
+	const char * const argv[4] = { "setenv", "-f", varname, NULL };
+	return _do_env_set(0, 3, (char * const *)argv);
+}
 #endif /* CONFIG_SPL_BUILD */
 
 /*
