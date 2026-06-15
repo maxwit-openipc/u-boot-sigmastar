@@ -58,16 +58,8 @@
 
 #include "../drivers/mstar/keypad/mdrv_keypad.h"
 
+
 DECLARE_GLOBAL_DATA_PTR;
-
-#if defined(CONFIG_INFINITY6B0)
-#include "asm/arch-infinity6b0/mach/io.h"
-
-#define CHIP_ADDR1 0x1F203150
-#define CHIP_ADDR2 0x1F004058
-#define MACADDR_LEN 6
-#define MACADDR_STR_LEN (MACADDR_LEN * 2 + 6)
-#endif
 
 ulong monitor_flash_len;
 
@@ -522,7 +514,6 @@ static int initr_env(void)
 
 #endif
 
-
 	return 0;
 }
 
@@ -581,38 +572,6 @@ static int initr_enable_interrupts(void)
 static int initr_ethaddr(void)
 {
 	bd_t *bd = gd->bd;
-
-#if defined(CONFIG_INFINITY6B0)
-    char macaddr[MACADDR_LEN];
-    char macaddr_str[MACADDR_STR_LEN]; /* xx:xx:xx:xx:xx:xx\0 */
-    uint32_t base = 0, reg_val = 0, pos = 0;
-
-    base = CHIP_ADDR2;
-
-    for (uint32_t addr = base + 8; addr >= base; addr -= 4) {
-        reg_val = INREG32(addr) & 0xFFFF;
-        macaddr[pos++] = (reg_val >> 8) & 0xFF;
-        macaddr[pos++] = (reg_val & 0xFF);
-    }
-
-    macaddr[0] &= 0xfe;
-    macaddr[0] |= 0x02;
-
-    sprintf(macaddr_str, "%02X:%02X:%02X:%02X:%02X:%02X",
-            (unsigned char)macaddr[0],
-            (unsigned char)macaddr[1],
-            (unsigned char)macaddr[2],
-            (unsigned char)macaddr[3],
-            (unsigned char)macaddr[4],
-            (unsigned char)macaddr[5]);
-
-	/* first delete env 'ethaddr'*/
-	force_delenv("ethaddr");
-	/* add new env 'ethaddr' with the generated MAC address */
-	setenv("ethaddr", macaddr_str);
-
-	char *env_val = getenv("ethaddr");
-#endif
 
 	/* kept around for legacy kernels only ... ignore the next section */
 	eth_getenv_enetaddr("ethaddr", bd->bi_enetaddr);
