@@ -298,6 +298,9 @@ void MHal_EMAC_Ewavetest_10M_LTP(void);
 void MHal_EMAC_Ewavetest_10M_ALLONE(void);
 void MHal_EMAC_Ewavetest_10M_TPIDLE(void);
 void MHal_EMAC_eWave_Table_Init(void);
+
+void MHal_EMAC_load_mac_addr(u8 mac_addr[6]);
+
 #if (SUPPORT_ALBANY)
 void MHal_EMAC_Albany_I2C(u8 enable);
 #endif

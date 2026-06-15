@@ -25,6 +25,8 @@
 #include "asm/arch/mach/platform.h"
 #include "asm/arch/mach/io.h"
 
+#define SERIAL_REG 0x1F004058
+
 //-------------------------------------------------------------------------------------------------
 //  Data structure
 //-------------------------------------------------------------------------------------------------
@@ -1678,4 +1680,19 @@ void MHal_EMAC_Ewavetest_10M_TPIDLE(void)
 void MHal_EMAC_PHY_reset(void)
 {
     MHal_EMAC_write_phy(phy_id, PHY_REG_BASIC, 0x1000);
+}
+
+void MHal_EMAC_load_mac_addr(u8 mac_addr[6])
+{
+    u32 reg_val = 0, pos = 0;
+
+    for (u32 addr = SERIAL_REG + 8; addr >= SERIAL_REG; addr -= 4) {
+        reg_val = INREG32(addr) & 0xFFFF;
+        mac_addr[pos++] = (reg_val >> 8) & 0xFF;
+        mac_addr[pos++] = (reg_val & 0xFF);
+    }
+
+    mac_addr[0] &= 0xfe;
+    mac_addr[0] |= 0x02;
+
 }
