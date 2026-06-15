@@ -75,9 +75,9 @@ do
 	make ARCH=arm $defconf
 	make ARCH=arm CROSS_COMPILE=$TOOLCHAIN DEVICE_TREE=$board -j$(nproc) || exit 1
 
-	./create_img.sh
+	./create_img.sh || exit 1
 	sh make_boot_spi${flash}.sh ${family}
-	mv BOOT.bin $OUTPUT/$image
+	mv -v BOOT.bin $OUTPUT/$image
 
 	echo
 done
