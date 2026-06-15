@@ -25,7 +25,7 @@
 #include "asm/arch/mach/platform.h"
 #include "asm/arch/mach/io.h"
 
-#define SERIAL_REG 0x1F004058
+#define REG_SOC_SERIAL 0x1F004058
 
 //-------------------------------------------------------------------------------------------------
 //  Data structure
@@ -1682,17 +1682,12 @@ void MHal_EMAC_PHY_reset(void)
     MHal_EMAC_write_phy(phy_id, PHY_REG_BASIC, 0x1000);
 }
 
-void MHal_EMAC_load_mac_addr(u8 mac_addr[6])
+void MHal_EMAC_load_mac_addr(u8 mac_addr[])
 {
-    u32 reg_val = 0, pos = 0;
-
-    for (u32 addr = SERIAL_REG + 8; addr >= SERIAL_REG; addr -= 4) {
-        reg_val = INREG32(addr) & 0xFFFF;
-        mac_addr[pos++] = (reg_val >> 8) & 0xFF;
-        mac_addr[pos++] = (reg_val & 0xFF);
+    for (int i = 0; i < 3; i++) {
+        u16 reg_val = INREG16(REG_SOC_SERIAL + i * 4);
+        *((u16 *)mac_addr + i) = reg_val;
     }
 
     mac_addr[0] &= 0xfe;
-    mac_addr[0] |= 0x02;
-
 }
