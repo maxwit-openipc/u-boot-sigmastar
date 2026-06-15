@@ -14,32 +14,22 @@ else
   uboot_bin=u-boot-dtb.bin
 fi
 
-rm -f u-boot.bin.mz
-./mz c u-boot.bin u-boot.bin.mz
-
 rm -f $uboot_bin.xz
 xz -z -k $uboot_bin
-mv -v $uboot_bin.xz u-boot.bin.xz
+if [ $uboot_bin != u-boot.bin ]; then
+  mv -v $uboot_bin.xz u-boot.bin.xz
+fi
 
 ms_ver="$(strings -a -T binary u-boot.bin | grep 'MVX' | grep 'UBT1501' | sed 's/\\*MVX/MVX/g' | cut -c 1-32)"
 ld_addr=$(gdb u-boot -ex 'p/x uboot_ld_addr' -ex 'quit' | grep '${CONFIG_IMAGE_POSTFIX}' | cut -d' ' -f3)
 ep_addr=$(gdb u-boot -ex 'p/x uboot_ep_addr' -ex 'quit' | grep '${CONFIG_IMAGE_POSTFIX}' | cut -d' ' -f3)
 
 #out_file=u-boot.img.bin
-out_file_mz=u-boot${CONFIG_IMAGE_POSTFIX}.mz.img.bin
 out_file_xz=u-boot${CONFIG_IMAGE_POSTFIX}.xz.img.bin
 out_file=u-boot${CONFIG_IMAGE_POSTFIX}.img.bin
 if [ `echo $ms_ver | grep -c "MVX1S" ` -gt 0 ];then
-  out_file_mz=u-boot_S.mz.img.bin
   out_file_xz=u-boot_S.xz.img.bin
 fi
-
-echo ""
-echo $out_file_mz
-#echo ./mkimage -A arm -O u-boot -C mz -a "$ld_addr" -e "$ep_addr" -n "$(echo $ms_ver)" -d u-boot.bin.mz "$out_file_mz"
-./mkimage -A arm -O u-boot -C mz -a "$ld_addr" -e "$ep_addr" -n "$ms_ver" -d u-boot.bin.mz "$out_file_mz"
-rm -Rf u-boot.bin.mz
-echo ""
 
 echo ""
 echo $out_file_xz
@@ -48,8 +38,8 @@ echo $out_file_xz
 rm -Rf u-boot.bin.xz
 echo ""
 
-echo ""
-echo $out_file
-#echo ./mkimage -A arm -O u-boot -C none -a "$ld_addr" -e "$ep_addr" -n "$(echo $ms_ver)" -d u-boot.bin "$out_file"
-./mkimage -A arm -O u-boot -C none -a "$ld_addr" -e "$ep_addr" -n "$ms_ver" -d u-boot.bin "$out_file"
-echo ""
+outsize=$(stat -c %s $out_file_xz)
+if [ "$outsize" -gt $((256 << 10)) ]; then
+	echo "$out_file_xz size > 256K!"
+	exit 1
+fi
