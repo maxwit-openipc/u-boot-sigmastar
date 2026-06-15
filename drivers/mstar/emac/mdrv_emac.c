@@ -657,6 +657,8 @@ u32 MDrv_EMAC_VarInit(void)
     }
     else
     {
+        MHal_EMAC_load_mac_addr(MY_MAC);
+
         ThisBCE.sa1[0]      = MY_MAC[0];
         ThisBCE.sa1[1]      = MY_MAC[1];
         ThisBCE.sa1[2]      = MY_MAC[2];
