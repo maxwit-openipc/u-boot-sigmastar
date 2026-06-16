@@ -73,7 +73,7 @@ do
 
 	make distclean
 	make ARCH=arm $defconf
-	make ARCH=arm CROSS_COMPILE=$TOOLCHAIN DEVICE_TREE=$board -j$(nproc) || exit 1
+	make ARCH=arm CROSS_COMPILE=$TOOLCHAIN DEVICE_TREE=$board $XOPT || exit 1
 
 	./create_img.sh || exit 1
 	sh make_boot_spi${flash}.sh ${family}
