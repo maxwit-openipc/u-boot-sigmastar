@@ -271,7 +271,7 @@ obj-y += stdio.o
 obj-$(CONFIG_CMD_BLOB) += cmd_blob.o
 
 # We always have this since drivers/ddr/fs/interactive.c needs it
-obj-y += cli_simple.o
+# obj-y += cli_simple.o
 
 obj-y += cli.o
 obj-y += cli_readline.o

@@ -1003,7 +1003,14 @@ static void get_user_input(struct in_str *i)
 	bootretry_reset_cmd_timeout();
 	i->__promptme = 1;
 	if (i->promptmode == 1) {
-		n = cli_readline(CONFIG_SYS_PROMPT);
+		char prompt_str[64];
+
+		const char *board = getenv("board");
+		if (board)
+			snprintf(prompt_str, sizeof(prompt_str), "%s $ ", board);
+		else
+			strncpy(prompt_str, CONFIG_SYS_PROMPT, sizeof(prompt_str) - 1);
+		n = cli_readline(prompt_str);
 	} else {
 		n = cli_readline(CONFIG_SYS_PROMPT_HUSH_PS2);
 	}
