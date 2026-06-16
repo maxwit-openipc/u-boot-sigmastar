@@ -82,6 +82,10 @@
             vid_gpios = <PAD_SAR_GPIO3>;
             vid_voltages = <900 1000>;  //2b'00 2b'01
         };
+
+        cis {
+            compatible = "soi,jxq03";
+        };
     };
 
 };

@@ -514,6 +514,16 @@ static int initr_env(void)
 
 #endif
 
+	int cis_offset = fdt_path_offset(gd->fdt_blob, "/soc/cis");
+	if (cis_offset >= 0) {
+		const char *cis = fdt_getprop(gd->fdt_blob, cis_offset, "compatible", NULL);
+		if (cis) {
+			const char *comma = strchr(cis, ',');
+			if (comma)
+				setenv("sensor", comma + 1);
+		}
+	}
+
 	return 0;
 }
 
