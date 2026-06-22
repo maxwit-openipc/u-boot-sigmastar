@@ -109,7 +109,7 @@
                     "GPIO13",
                     "GPIO14",
                     "GPIO15",
-                    "FUART_RX",
+                    "vbus_enable_pin",   /* FUART_RX */
                     "speaker_en", /* FUART_TX */
                     "vmotor_en",  /* FUART_CTS */
                     "FUART_RTS",
@@ -133,7 +133,7 @@
                     "cis_reset", /* SR_IO13 */
                     "SR_IO14",
                     "SR_IO15",
-                    "vbus_en",   /* SR_IO16 */
+                    "SR_IO16",
                     "SR_IO17",   /* SR_IO17 */
                     "UART0_RX",
                     "UART0_TX",
@@ -156,7 +156,7 @@
                     "SD_D2",
                     "SD_D3",
                     "PM_SD_CDZ",
-                    "wled",      /* PM_IRIN */
+                    "wled_pin",  /* PM_IRIN */
                     "PM_GPIO0",
                     "PM_GPIO1",
                     "PM_GPIO2",
@@ -171,10 +171,10 @@
                     "PM_SPI_DO",
                     "PM_SPI_WPZ",
                     "PM_SPI_HLD",
-                    "blue-led",  /* PM_LED0 */
-                    "red-led",   /* PM_LED1 */
-                    "ircut_ina", /* SAR_GPIO0 */
-                    "ircut_inb", /* SAR_GPIO1 */
+                    "blue_led",  /* PM_LED0 */
+                    "red_led",   /* PM_LED1 */
+                    "ircut_pin1", /* SAR_GPIO0 */
+                    "ircut_pin2", /* SAR_GPIO1 */
                     "cds_in",    /* SAR_GPIO2 */
                     "SAR_GPIO3",
                     "ETH_RN",
