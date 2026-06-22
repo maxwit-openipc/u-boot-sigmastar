@@ -109,7 +109,7 @@
                     "GPIO13",
                     "GPIO14",
                     "GPIO15",
-                    "vbus_enable_pin",   /* FUART_RX */
+                    "vbus_en",   /* FUART_RX */
                     "speaker_en", /* FUART_TX */
                     "vmotor_en",  /* FUART_CTS */
                     "FUART_RTS",
