@@ -85,6 +85,13 @@ config CMD_XIMG
 	help
 	  Extract a part of a multi-image.
 
+config PREBOOT
+	string "preboot default value"
+	default "usb start" if USB_KEYBOARD
+	default ""
+	help
+	  This is the default of "preboot" environment variable.
+
 endmenu
 
 menu "Environment commands"
