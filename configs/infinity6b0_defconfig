@@ -270,6 +270,7 @@ CONFIG_CMD_GO=y
 # CONFIG_CMD_IMI is not set
 # CONFIG_CMD_IMLS is not set
 # CONFIG_CMD_XIMG is not set
+CONFIG_PREBOOT="mmc rescan; if fatload mmc 0 $baseaddr /firmware/preboot.scr; then source $baseaddr; fi"
 
 #
 # Environment commands
@@ -374,13 +375,16 @@ CONFIG_DEFAULT_DEVICE_TREE=""
 #
 # Device Drivers
 #
-# CONFIG_DM is not set
+CONFIG_DM=y
 
 #
 # NAND Device Support
 #
 # CONFIG_NAND_DENALI is not set
 # CONFIG_PHYLIB is not set
+# CONFIG_DM_SERIAL is not set
+# CONFIG_DM_SPI is not set
+CONFIG_DM_GPIO=y
 # CONFIG_HW_WATCHDOG is not set
 CONFIG_USB_ARCH_HAS_HCD=y
 # CONFIG_USB is not set
@@ -462,4 +466,3 @@ CONFIG_SSTAR_PWM=y
 # CONFIG_CC_OPTIMIZE_LIBS_FOR_SPEED is not set
 CONFIG_HAVE_PRIVATE_LIBGCC=y
 CONFIG_SYS_HZ=1000
-CONFIG_PREBOOT=y
