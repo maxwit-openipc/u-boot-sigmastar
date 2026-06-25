@@ -470,7 +470,7 @@ static int should_load_env(void)
 	MDrv_GPIO_Pad_Read(gpio_num, &value);
 #endif
 	if (value == 0) {
-		return 1;
+		return 0;
 	}
 
 #ifdef CONFIG_OF_CONTROL
