@@ -455,6 +455,24 @@ static int initr_dataflash(void)
  */
 static int should_load_env(void)
 {
+	int gpio_num = 66; // FIXME
+	int value = 1;
+
+#if defined(CONFIG_DM_GPIO)
+	if (!gpio_request(gpio_num, "system reset")) {
+		gpio_direction_input(gpio_num);
+		value = gpio_get_value(gpio_num);
+		gpio_free(gpio_num);
+	}
+#elif defined(CONFIG_MS_GPIO)
+	MDrv_GPIO_Pad_Set(gpio_num);
+	MDrv_GPIO_Pad_Odn(gpio_num);
+	MDrv_GPIO_Pad_Read(gpio_num, &value);
+#endif
+	if (value == 0) {
+		return 1;
+	}
+
 #ifdef CONFIG_OF_CONTROL
 	return fdtdec_get_config_int(gd->fdt_blob, "load-environment", 1);
 #elif defined CONFIG_DELAY_ENVIRONMENT
