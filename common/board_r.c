@@ -443,6 +443,19 @@ static int initr_dataflash(void)
 }
 #endif
 
+#if defined(CONFIG_OF_CONTROL) && (defined(CONFIG_FIT) || defined(CONFIG_OF_LIBFDT))
+static int get_gpio_num_with_linename(const char *node_name, const char *property, const char *line_name) {
+	int offset = fdt_path_offset(gd->fdt_blob, node_name);
+	if (offset >= 0) {
+		int gpio_num = fdt_find_string(gd->fdt_blob, offset, property, line_name);
+		if (gpio_num >= 0)
+			return gpio_num;
+	}
+
+	return -1;
+}
+#endif
+
 /*
  * Tell if it's OK to load the environment early in boot.
  *
@@ -457,25 +470,22 @@ static int initr_dataflash(void)
 static int should_load_env(void)
 {
 #if defined(CONFIG_OF_CONTROL) && (defined(CONFIG_FIT) || defined(CONFIG_OF_LIBFDT))
-	int offset = fdt_path_offset(gd->fdt_blob, "/soc/gpio");
-	if (offset > 0) {
-		int gpio_num = fdt_find_string(gd->fdt_blob, offset, "gpio-line-names", "sys_reset");
-		if (gpio_num >= 0) {
-			u8 value = 1;
+	int gpio_num = get_gpio_num_with_linename("/soc/gpio", "gpio-line-names", "sys_reset");
+	if (gpio_num >= 0) {
+		u8 value = 1;
 #if defined(CONFIG_DM_GPIO)
-			if (!gpio_request(gpio_num, "system reset")) {
-				gpio_direction_input(gpio_num);
-				value = gpio_get_value(gpio_num);
-				gpio_free(gpio_num);
-			}
+		if (!gpio_request(gpio_num, "system reset")) {
+			gpio_direction_input(gpio_num);
+			value = gpio_get_value(gpio_num);
+			gpio_free(gpio_num);
+		}
 #elif defined(CONFIG_MS_GPIO)
-			MDrv_GPIO_Pad_Set(gpio_num);
-			MDrv_GPIO_Pad_Odn(gpio_num);
-			MDrv_GPIO_Pad_Read(gpio_num, &value);
+		MDrv_GPIO_Pad_Set(gpio_num);
+		MDrv_GPIO_Pad_Odn(gpio_num);
+		MDrv_GPIO_Pad_Read(gpio_num, &value);
 #endif
-			if (value == 0) {
-				return 0;
-			}
+		if (value == 0) {
+			return 0;
 		}
 	}
 #endif
