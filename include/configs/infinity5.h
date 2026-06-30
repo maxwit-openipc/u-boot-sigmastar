@@ -26,8 +26,6 @@
 #define CONFIG_SYS_L2CACHE_OFF		/* No L2 cache */
 /*#define CONFIG_SYS_ARCH_TIMER   1*/
 #define CONFIG_MS_PIU_TIMER   1
-#define CONFIG_AUTOBOOT_KEYED
-#define CONFIG_AUTOBOOT_DELAY_STR "\x0d" /* press ENTER to interrupt BOOT */
 
 #define CONFIG_DISPLAY_BOARDINFO    1
 
