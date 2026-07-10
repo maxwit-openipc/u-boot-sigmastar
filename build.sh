@@ -5,6 +5,7 @@ if [ $# -gt 0 ]; then
 else
 	board_list="
 	tc2101
+	sap1540
 	ssc337-nor
 	ssc335-nor
 	ssc333-nor
@@ -14,13 +15,11 @@ else
 	"
 fi
 
-test -z $OUTPUT && OUTPUT=output
-
-rm -vf $OUTPUT/u-boot*
-mkdir -p $OUTPUT
+OUTPUT=${OUTPUT:-output}
+XOPT=${XOPT:-V=1}
 
 if [ -z "$TOOLCHAIN" ]; then
-	for t in arm-linux-gnueabi- arm-none-eabi-
+	for t in arm-openipc-linux-musleabihf- arm-linux- arm-none-eabi-
 	do
 		if which ${t}gcc > /dev/null; then
 			TOOLCHAIN=$t
@@ -36,16 +35,11 @@ fi
 
 for board in $board_list
 do
-	image=u-boot-${board}.bin
-
-	echo "Building '${image}' with '$TOOLCHAIN'"
-	echo "======================================="
-
 	case $board in
 		ssc325-*|ssc325de-*)
 			family=infinity6
 			;;
-		ssc333-*|ssc335-*|ssc337-*|ssc335de-*|ssc337de-*|tc2101)
+		ssc333-*|ssc335-*|ssc337-*|ssc335de-*|ssc337de-*|tc2101|sap1540)
 			family=infinity6b0
 			;;
 		ssc377-*|ssc377d-*|ssc377de-*|ssc377qe-*|ssc378de-*|ssc378qe-*)
@@ -59,6 +53,8 @@ do
 			exit 1
 			;;
 	esac
+
+	echo "Building u-boot for $board ($family) ..."
 
 	case $board in
 		*-nand)
@@ -77,7 +73,8 @@ do
 
 	./create_img.sh || exit 1
 	sh make_boot_spi${flash}.sh ${family}
-	mv -v BOOT.bin $OUTPUT/$image
+	mkdir -vp $OUTPUT/$family
+	mv -v BOOT.bin $OUTPUT/$family/u-boot-${board}.bin
 
 	echo
 done
