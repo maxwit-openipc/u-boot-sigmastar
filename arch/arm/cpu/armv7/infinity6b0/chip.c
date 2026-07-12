@@ -158,6 +158,12 @@ int checkboard(void)
 		while(1);
 	}
 */
+#ifdef CONFIG_OF_CONTROL
+        const char *model = fdt_getprop(gd->fdt_blob, 0, "model", NULL);
+        if (model)
+            printf("Model: %s\n", model);
+#endif
+
         int i=0;
 
         printf("Version: ");
