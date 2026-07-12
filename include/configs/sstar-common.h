@@ -42,7 +42,7 @@
 	"rootaddr=" __stringify(CONFIG_ENV_ROOTADDR) "\0" \
 	"rootsize=" __stringify(CONFIG_ENV_ROOTSIZE) "\0" \
 	"rootmtd=5120k\0" \
-	"cmdnor=sf probe 0; setenv setargs setenv bootargs ${bootargs}; run setargs; sf read ${baseaddr} ${kernaddr} ${kernsize}; bootm ${baseaddr}\0" \
+	"cmdnor=sf probe 0; setenv setargs setenv bootargs ${bootargs}; run setargs; sf read ${baseaddr} ${kernaddr} ${kernsize}; bootm ${baseaddr} - ${fdtcontroladdr}\0" \
 	"ubnor=${updatetool} ${baseaddr} u-boot-${board}.bin && run ubwrite\0" \
 	"uknor=${updatetool} ${baseaddr} uImage.${soc} && run ukwrite\0" \
 	"urnor=${updatetool} ${baseaddr} rootfs.squashfs.${soc} && run urwrite\0" \
@@ -83,7 +83,7 @@
 	"rootaddr=" __stringify(CONFIG_ENV_ROOTADDR) "\0" \
 	"rootsize=" __stringify(CONFIG_ENV_ROOTSIZE) "\0" \
 	"mtdparts=" MTDPARTS_DEFAULT "\0" \
-	"cmdnand=setenv setargs setenv bootargs ${bootargs}; run setargs; ubi part ubi; ubi read ${baseaddr} kernel; bootm ${baseaddr}\0" \
+	"cmdnand=setenv setargs setenv bootargs ${bootargs}; run setargs; ubi part ubi; ubi read ${baseaddr} kernel; bootm ${baseaddr} - ${fdtcontroladdr}\0" \
 	"ubnand=${updatetool} ${baseaddr} u-boot-${board}.bin && run ubwrite\0" \
 	"urnand=${updatetool} ${baseaddr} rootfs.ubi.${soc} && run urwrite\0" \
 	"ubwrite=nand erase 0x0 ${rootaddr}; nand write ${baseaddr} 0x0 ${rootaddr}\0" \

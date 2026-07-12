@@ -472,6 +472,10 @@ static int initr_env(void)
 	else
 		set_default_env(NULL);
 
+#ifdef CONFIG_OF_CONTROL
+	setenv_addr("fdtcontroladdr", map_to_sysmem(gd->fdt_blob));
+#endif
+
 	/* Initialize from environment */
 	load_addr = getenv_ulong("loadaddr", 16, load_addr);
 #if defined(CONFIG_SYS_EXTBDINFO)

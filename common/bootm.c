@@ -226,9 +226,10 @@ static int bootm_find_ramdisk(int flag, int argc, char * const argv[])
 	return 0;
 }
 
-#if defined(CONFIG_OF_LIBFDT)
+#if defined(CONFIG_FIT) || defined(CONFIG_OF_LIBFDT)
 static int bootm_find_fdt(int flag, int argc, char * const argv[])
 {
+#ifdef CONFIG_OF_LIBFDT
 	int ret;
 
 	/* find flattened device tree */
@@ -240,6 +241,18 @@ static int bootm_find_fdt(int flag, int argc, char * const argv[])
 	}
 
 	set_working_fdt_addr(images.ft_addr);
+#elif defined(CONFIG_OF_CONTROL)
+	if (argc > 2) {
+		images.ft_addr = simple_strtoul(argv[2], NULL, 16);
+		if (fdt_check_header(images.ft_addr)) {
+			printf("Invalid FDT blob at 0x%p\n", images.ft_addr);
+			return -EINVAL;
+		}
+		images.ft_len = fdt_totalsize(images.ft_addr);
+		printf("## FDT blob at 0x%p\n", images.ft_addr);
+		printf("   FDT size: %ld bytes\n\n", images.ft_len);
+	}
+#endif
 
 	return 0;
 }
@@ -250,18 +263,9 @@ int bootm_find_ramdisk_fdt(int flag, int argc, char * const argv[])
 	if (bootm_find_ramdisk(flag, argc, argv))
 		return 1;
 
-#if defined(CONFIG_OF_LIBFDT)
+#if defined(CONFIG_FIT) || defined(CONFIG_OF_LIBFDT)
 	if (bootm_find_fdt(flag, argc, argv))
 		return 1;
-#elif defined(CONFIG_OF_CONTROL)
-	images.ft_addr = map_sysmem(gd->fdt_blob, 0);
-	if (fdt_check_header(images.ft_addr)) {
-		printf("Invalid FDT blob at 0x%p\n", images.ft_addr);
-		return -EINVAL;
-	}
-	images.ft_len = fdt_totalsize(images.ft_addr);
-	printf("## FDT blob at 0x%p\n", images.ft_addr);
-	printf("   FDT size: %ld bytes\n\n", images.ft_len);
 #endif
 
 	return 0;
