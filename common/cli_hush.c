@@ -1007,7 +1007,7 @@ static void get_user_input(struct in_str *i)
 
 		const char *board = getenv("board");
 		if (board)
-			snprintf(prompt_str, sizeof(prompt_str), "%s $ ", board);
+			snprintf(prompt_str, sizeof(prompt_str), "IPC (%s) $ ", board);
 		else
 			strncpy(prompt_str, CONFIG_SYS_PROMPT, sizeof(prompt_str) - 1);
 		n = cli_readline(prompt_str);
