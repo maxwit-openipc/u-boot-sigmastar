@@ -311,15 +311,6 @@ static void boot_jump_linux(bootm_headers_t *images, int flag)
 	bootstage_mark(BOOTSTAGE_ID_RUN_OS);
 	announce_and_cleanup(fake);
 
-#ifdef CONFIG_OF_CONTROL
-	images->ft_len = fdt_totalsize(gd->fdt_blob);
-	images->ft_addr = getenv_ulong("fdtcontroladdr", 16, gd->fdt_blob);
-	if (images->ft_addr != gd->fdt_blob) {
-		printf("Copying FDT from 0x%lx to 0x%lx...\n", (ulong)gd->fdt_blob, images->ft_addr);
-		memcpy((void *)images->ft_addr, gd->fdt_blob, images->ft_len);
-	}
-#endif
-
 	if (images->ft_len > 0)
 		r2 = (unsigned long)images->ft_addr;
 	else

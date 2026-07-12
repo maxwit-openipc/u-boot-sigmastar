@@ -253,6 +253,14 @@ int bootm_find_ramdisk_fdt(int flag, int argc, char * const argv[])
 #if defined(CONFIG_OF_LIBFDT)
 	if (bootm_find_fdt(flag, argc, argv))
 		return 1;
+#elif defined(CONFIG_OF_CONTROL)
+	images.ft_addr = map_sysmem(gd->fdt_blob, 0);
+	if (fdt_check_header(images.ft_addr)) {
+		printf("Invalid FDT blob at 0x%lx (0x%lx)\n",
+			(ulong)gd->fdt_blob, (ulong)images.ft_addr);
+		return -EINVAL;
+	}
+	images.ft_len = fdt_totalsize(images.ft_addr);
 #endif
 
 	return 0;
