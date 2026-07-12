@@ -226,7 +226,7 @@ static int bootm_find_ramdisk(int flag, int argc, char * const argv[])
 	return 0;
 }
 
-#if defined(CONFIG_OF_LIBFDT)
+#if defined(CONFIG_OF_CONTROL)
 static int bootm_find_fdt(int flag, int argc, char * const argv[])
 {
 	int ret;
@@ -239,7 +239,7 @@ static int bootm_find_fdt(int flag, int argc, char * const argv[])
 		return 1;
 	}
 
-	set_working_fdt_addr(images.ft_addr);
+	// set_working_fdt_addr(images.ft_addr);
 
 	return 0;
 }
@@ -250,7 +250,7 @@ int bootm_find_ramdisk_fdt(int flag, int argc, char * const argv[])
 	if (bootm_find_ramdisk(flag, argc, argv))
 		return 1;
 
-#if defined(CONFIG_OF_LIBFDT)
+#if defined(CONFIG_OF_CONTROL)
 	if (bootm_find_fdt(flag, argc, argv))
 		return 1;
 #endif
@@ -708,7 +708,7 @@ int do_bootm_states(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[],
     }
 
 #endif
-#if defined(CONFIG_OF_LIBFDT) && defined(CONFIG_LMB)
+#if defined(CONFIG_OF_CONTROL) && defined(CONFIG_LMB)
 	if (!ret && (states & BOOTM_STATE_FDT)) {
 		boot_fdt_add_mem_rsv_regions(&images->lmb, images->ft_addr);
 		ret = boot_relocate_fdt(&images->lmb, &images->ft_addr,
