@@ -2,6 +2,7 @@
 
 OUTPUT=${OUTPUT:-$PWD/output}
 XOPT=${XOPT:-V=1}
+TARGET_BOARD=$1
 
 for dts in dts/upstream/arch/arm/boot/dts/*.dts
 do
@@ -11,7 +12,7 @@ do
     family=${chip_ids[1]}
 
     dtb=$(basename ${dts%.dts})
-    soc=$(grep -m1 'sstar,ssc' $dts | awk -F ',' '{print $2}' | sed 's/[",;]//g')
+    soc=$(grep -m1 'sstar,ssc[0-9]\+[a-z]*"' $dts | awk -F ',' '{print $2}' | sed 's/[",;]//g')
     if test -z "$soc"; then
         echo "$dtb: SoC not defined (skipped)"
         echo
@@ -19,6 +20,7 @@ do
     fi
 
     board=$(grep -m1 'compatible' $dts | awk -F ',' '{print $2}' | sed 's/[",;]//g')
+    test -n "$TARGET_BOARD" -a "$TARGET_BOARD" != $board && continue
 
     for tc in arm-openipc-linux-musleabi- \
         arm-linux-musleabi- \
@@ -51,7 +53,6 @@ do
     fi
 
     echo "Building u-boot for $board ($family/$soc) ..."
-
     echo
 
     case $board in
@@ -71,8 +72,12 @@ do
 
     ./create_img.sh || exit 1
     sh make_boot_spi${flash}.sh ${family}
+    mv -v BOOT.bin u-boot-${board}.bin
+
     mkdir -vp $OUTPUT/$soc
-    mv -v BOOT.bin $OUTPUT/$soc/u-boot-${board}.bin
+    cp -v u-boot-${board}.bin $OUTPUT/$soc/
 
     echo
+
+    test -n "$TARGET_BOARD" -a "$TARGET_BOARD" == $board && break
 done

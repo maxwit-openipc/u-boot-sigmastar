@@ -18,7 +18,7 @@
 
 / {
     model = "SSC337DE with SPI NAND 16M";
-    compatible = "generic,ssc337de-nor",
+    compatible = "sstar,ssc337de-nand",
         "sstar,ssc337de",
         "sstar,infinity6b0";
 
