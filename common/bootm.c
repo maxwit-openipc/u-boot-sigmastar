@@ -226,10 +226,9 @@ static int bootm_find_ramdisk(int flag, int argc, char * const argv[])
 	return 0;
 }
 
-#if defined(CONFIG_FIT) || defined(CONFIG_OF_LIBFDT)
+#if defined(CONFIG_OF_LIBFDT)
 static int bootm_find_fdt(int flag, int argc, char * const argv[])
 {
-#ifdef CONFIG_OF_LIBFDT
 	int ret;
 
 	/* find flattened device tree */
@@ -241,7 +240,6 @@ static int bootm_find_fdt(int flag, int argc, char * const argv[])
 	}
 
 	set_working_fdt_addr(images.ft_addr);
-#endif
 
 	return 0;
 }
@@ -252,7 +250,7 @@ int bootm_find_ramdisk_fdt(int flag, int argc, char * const argv[])
 	if (bootm_find_ramdisk(flag, argc, argv))
 		return 1;
 
-#if defined(CONFIG_FIT) || defined(CONFIG_OF_LIBFDT)
+#if defined(CONFIG_OF_LIBFDT)
 	if (bootm_find_fdt(flag, argc, argv))
 		return 1;
 #endif
