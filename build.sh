@@ -4,6 +4,7 @@ OUTPUT=${OUTPUT:-$PWD/output}
 XOPT=${XOPT:-V=1}
 TARGET_BOARD=$1
 
+count=0
 for dts in dts/upstream/arch/arm/boot/dts/*.dts
 do
     chip_ids=($(grep -m1 -o '"sstar,infinity.*";' $dts | sed 's/[",;]/ /g'))
@@ -77,7 +78,11 @@ do
     mkdir -vp $OUTPUT/$soc
     cp -v u-boot-${board}.bin $OUTPUT/$soc/
 
+    ((count++))
     echo
 
     test -n "$TARGET_BOARD" -a "$TARGET_BOARD" == $board && break
 done
+
+echo "Total $count boards was built."
+echo
