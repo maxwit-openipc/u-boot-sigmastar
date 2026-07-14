@@ -39,7 +39,7 @@ rm -Rf u-boot.bin.xz
 echo ""
 
 outsize=$(stat -c %s $out_file_xz)
-if [ "$outsize" -gt $((256 << 10)) ]; then
-	echo "$out_file_xz size > 256K!"
+if [ "$CONFIG_IMAGE_POSTFIX" != _spinand -a  "$outsize" -gt $((128 << 10)) ]; then
+	echo "$out_file_xz size is to large ($((outsize>>10))K > 128K)!"
 	exit 1
 fi
