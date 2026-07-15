@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash -e
 
 OUTPUT=${OUTPUT:-$PWD/output}
 XOPT=${XOPT:-V=1}
@@ -68,16 +68,16 @@ do
 
     make distclean
     make ARCH=arm $defconfig
-    make ARCH=arm CROSS_COMPILE=$toolchain DEVICE_TREE=$dtb $XOPT || exit 1
+    make ARCH=arm CROSS_COMPILE=$toolchain DEVICE_TREE=$dtb $XOPT
 
-    ./create_img.sh || exit 1
+    ./create_img.sh
     sh make_boot_spi${flash}.sh ${family}
     mv -v BOOT.bin u-boot-${board}.bin
 
     mkdir -vp $OUTPUT/$soc
     cp -v u-boot-${board}.bin $OUTPUT/$soc/
 
-    ((count++))
+    count=$((count + 1))
     echo
 
     test "$target_board" == $board && break
