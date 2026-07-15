@@ -512,13 +512,16 @@ static int initr_env(void)
 			setenv("soc", comma + 1);
 	}
 
-	int cis_offset = fdt_path_offset(gd->fdt_blob, "/soc/cis");
-	if (cis_offset >= 0) {
-		const char *cis = fdt_getprop(gd->fdt_blob, cis_offset, "compatible", NULL);
-		if (cis) {
-			const char *comma = strchr(cis, ',');
-			if (comma)
-				setenv("sensor", comma + 1);
+    const char *cis_alias = fdt_get_alias(gd->fdt_blob, "cis");
+    if (cis_alias) {
+		int cis_offset = fdt_path_offset(gd->fdt_blob, cis_alias);
+		if (cis_offset >= 0) {
+			const char *cis_id = fdt_getprop(gd->fdt_blob, cis_offset, "compatible", NULL);
+			if (cis_id) {
+				const char *comma = strchr(cis_id, ',');
+				if (comma)
+					setenv("sensor", comma + 1);
+			}
 		}
 	}
 #endif
