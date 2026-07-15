@@ -497,7 +497,7 @@ static int initr_env(void)
 #endif /* CONFIG_405GP, CONFIG_405EP */
 #endif /* CONFIG_SYS_EXTBDINFO */
 
-#if defined(CONFIG_OF_CONTROL) && (defined(CONFIG_FIT) || defined(CONFIG_OF_LIBFDT))
+#if defined(CONFIG_FIT) || defined(CONFIG_OF_LIBFDT)
 	const char *board = NULL;
 	if (fdt_get_string_index(gd->fdt_blob, 0, "compatible", 0, &board) == 0) {
 		const char *comma = strchr(board, ',');
