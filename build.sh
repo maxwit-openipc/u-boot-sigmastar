@@ -1,88 +1,66 @@
-#!/usr/bin/env bash
+#!/bin/sh
+export ARCH=arm
+export CROSS_COMPILE=arm-linux-gnueabi-
 
-OUTPUT=${OUTPUT:-$PWD/output}
-XOPT=${XOPT:-V=1}
-TARGET_BOARD=$1
+rm -rf output
+mkdir -p output
 
-count=0
-for dts in dts/upstream/arch/arm/boot/dts/*.dts
-do
-    chip_ids=($(grep -m1 -o '"sstar,infinity.*";' $dts | sed 's/[",;]/ /g'))
-    test ${#chip_ids[@]} -ne 2 && continue
-    # vendor=${chip_ids[0]}
-    family=${chip_ids[1]}
+spinor() {
+	make $2_defconfig
+	make -j8 KCFLAGS=-DPRODUCT_SOC=$1
+	sh make_boot_spinor.sh $2
+	mv BOOT.bin output/u-boot-$1-nor.bin
+	make distclean
+}
 
-    dtb=$(basename ${dts%.dts})
-    soc=$(grep -m1 'sstar,ssc[0-9]\+[a-z]*"' $dts | awk -F ',' '{print $2}' | sed 's/[",;]//g')
-    if test -z "$soc"; then
-        echo "$dtb: SoC not defined (skipped)"
-        echo
-        continue
-    fi
+spinand() {
+	make $2_spinand_defconfig
+	make -j8 KCFLAGS=-DPRODUCT_SOC=$1
+	sh make_boot_spinand.sh $2
+	mv BOOT.bin output/u-boot-$1-nand.bin
+	make distclean
+}
 
-    board=$(grep -m1 'compatible' $dts | awk -F ',' '{print $2}' | sed 's/[",;]//g')
-    test -n "$TARGET_BOARD" -a "$TARGET_BOARD" != $board && continue
-
-    for tc in arm-openipc-linux-musleabi- \
-        arm-linux-musleabi- \
-        arm-linux-gnueabi- \
-        arm-linux- \
-        arm-none-eabi-
-    do
-        for out in $PWD/output $(dirname $PWD)/output $OUTPUT
-        do
-            path=$out/$soc/host/bin
-            if test -e $path/${tc}gcc; then
-                toolchain=$path/$tc
-                break
-            fi
-        done
-
-        test -n "$toolchain" && break
-
-        if which ${tc}gcc > /dev/null; then
-            toolchain=$tc
-            break
-        fi
-    done
-
-    if [ -z "$toolchain" ]; then
-        echo "No toolchain found for $soc!"
-        echo "Skip to build u-boot for $board!"
-        echo
-        continue
-    fi
-
-    echo "Building u-boot for $board ($family/$soc) ..."
-    echo
-
-    case $board in
-        *-nand)
-            flash=nand
-            defconfig=${family}_spinand_defconfig
-            ;;
-        *)
-            flash=nor
-            defconfig=${family}_defconfig
-            ;;
-    esac
-
-    make distclean
-    make ARCH=arm $defconfig
-    make ARCH=arm CROSS_COMPILE=$toolchain DEVICE_TREE=$dtb $XOPT || exit 1
-
-    ./create_img.sh || exit 1
-    sh make_boot_spi${flash}.sh ${family}
-    mv -v BOOT.bin u-boot-${board}.bin
-
-    mkdir -vp $OUTPUT/$soc
-    cp -v u-boot-${board}.bin $OUTPUT/$soc/
-
-    ((count++))
-    echo
-
-    test -n "$TARGET_BOARD" -a "$TARGET_BOARD" == $board && break
+# spinor infinity6
+for soc in ssc325; do
+	spinor $soc infinity6
 done
 
-echo "Total $count boards was built."
-echo
+# spinand infinity6
+for soc in ssc325de; do
+	spinand $soc infinity6
+done
+
+# spinor infinity6b0
+for soc in ssc333 ssc335 ssc337 ssc335de ssc337de; do
+	spinor $soc infinity6b0
+done
+
+# spinand infinity6b0
+for soc in ssc337de; do
+	spinand $soc infinity6b0
+done
+
+# spinor infinity6c
+for soc in ssc377 ssc377d ssc377de ssc377qe ssc378de ssc378qe; do
+	spinor $soc infinity6c
+done
+
+# spinor infinity6e
+for soc in ssc30kd ssc30kq ssc338q; do
+	spinor $soc infinity6e
+done
+
+# spinand infinity6e
+for soc in ssc338q; do
+	spinand $soc infinity6e
+done
+
+# initramfs infinity6e
+for soc in ssc338q; do
+	make infinity6e_spinand_defconfig
+	sed -i "s/CONFIG_MS_SAVE_ENV_IN_NAND_FLASH=y/CONFIG_MS_SAVE_ENV_IN_NAND_FLASH=n/g" .config
+	make -j8 KCFLAGS=-DPRODUCT_SOC=$soc
+	cp u-boot_spinand.xz.img.bin output/u-boot-$soc-ram.bin
+	make distclean
+done
